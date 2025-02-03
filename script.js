@@ -25,14 +25,6 @@ async function getWeatherData(lat, lng) {
     }
 }
 
-function getClothingRecommendation(temperature) {
-    if (temperature < 0) return "Очень холодно! Наденьте теплую куртку, шапку, шарф и перчатки.";
-    if (temperature < 10) return "Прохладно. Рекомендуется надеть пальто или куртку.";
-    if (temperature < 20) return "Умеренно тепло. Подойдет легкая куртка или свитер.";
-    if (temperature < 25) return "Тепло. Можно надеть футболку и легкие брюки или юбку.";
-    return "Жарко! Наденьте легкую одежду и не забудьте про головной убор.";
-}
-
 function getWeatherIcon(weatherCode) {
     if (weatherCode <= 3) return "☀️"; 
     if (weatherCode <= 48) return "☁️";
@@ -58,9 +50,18 @@ async function getAIRecommendation(weatherData) {
 
         return response.choices[0].message.content;
     } catch (error) {
-        console.error('Ошибка при получении рекомендации от AI:', error);
-        return getClothingRecommendation(currentTemp); 
+        const currentTemp = weatherData.hourly.temperature_2m[new Date().getHours()];
+        const fallbackRecommendation = getClothingRecommendation(currentTemp);
+		return fallbackRecommendation;
     }
+}
+
+function getClothingRecommendation(temperature) {
+    if (temperature < 0) return "Очень холодно! Наденьте теплую куртку, шапку, шарф и перчатки.";
+    if (temperature < 10) return "Прохладно. Рекомендуется надеть пальто или куртку.";
+    if (temperature < 20) return "Умеренно тепло. Подойдет легкая куртка или свитер.";
+    if (temperature < 25) return "Тепло. Можно надеть футболку и легкие брюки или юбку.";
+    return "Жарко! Наденьте легкую одежду и не забудьте про головной убор.";
 }
 
 async function formatWeatherData(data) {
