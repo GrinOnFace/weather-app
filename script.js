@@ -1,7 +1,7 @@
 import OpenAI from 'https://cdn.jsdelivr.net/npm/openai@4.0.0/+esm';
 
 const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    apiKey: prompt('Пожалуйста, введите ваш API ключ OpenAI:'),
     dangerouslyAllowBrowser: true
 });
 
@@ -59,7 +59,7 @@ async function getAIRecommendation(weatherData) {
         return response.choices[0].message.content;
     } catch (error) {
         console.error('Ошибка при получении рекомендации от AI:', error);
-        return getClothingRecommendation(currentTemp); // Возвращаем базовую рекомендацию при ошибке
+        return getClothingRecommendation(currentTemp); 
     }
 }
 
